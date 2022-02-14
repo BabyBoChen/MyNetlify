@@ -6,9 +6,17 @@
         <title>BBLJ Netlify</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
+        <link rel="icon" href="/favicon.ico?v=1">
     </head>
     <body>
         <h1>Hello Netlify!</h1>
+        <p>開啟console可以看到"Go Web Assembly"表示Web Assembly載入成功！</p>
+        <script src="wasm_exec.js"></script>
+        <script>
+            const go = new Go();
+            WebAssembly.instantiateStreaming(fetch("ransom.wasm"), go.importObject).then((result) => {
+                go.run(result.instance);
+            });
+        </script>
     </body>
 </html>
