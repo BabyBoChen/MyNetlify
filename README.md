@@ -1,0 +1,5 @@
+# MyNetlify
+repo for my Netlify Project
+
+勒索信產生器可在使用者輸入的文字中（多行）加入各種文字樣式，讓每個字元都產生出不同的字體大小、顏色和底色等裝飾，模擬出綁匪為了怕字跡被認出或是留下指紋而使用印刷品拼成勒索信的效果。
+本作品主要是想測試以Golang撰寫出的WebAssembly和Vanilla JS在進行文字處理時哪個方式效率較佳。實驗結果竟然是JS比WebAssembly快上很多倍，可能是因為要丟給WebAssembly處理的文字運算無法發揮出WebAssembly真正的效用。
