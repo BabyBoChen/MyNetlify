@@ -3,6 +3,10 @@ self.importScripts('wasm_exec.js', 'ransom-letter.js');
 const go = new Go();
 WebAssembly.instantiateStreaming(fetch("goWASM.wasm"), go.importObject).then((result) => {
     go.run(result.instance);
+    self.postMessage({
+        html: 'ready',
+        time: 0,
+    });
 });
 
 self.onmessage = function(event) {

@@ -117,6 +117,7 @@
         const resultDiv = document.getElementById("resultDiv");
         /** @type {HTMLButtonElement} */
         const btnPrint = document.getElementById('btnPrint');
+        btnPrint.disabled = true;
         /** @type {HTMLButtonElement} */
         const btnCopy = document.getElementById('btnCopy');
         /** @type {HTMLDivElement} */
@@ -132,6 +133,10 @@
                 /** @type {Number}} */
                 time: event.data['time'],
             };
+            if(output.html == "ready" && output.time == 0){
+                btnPrint.disabled = false;
+                return;
+            }
             resultDiv.innerHTML = output.html;
             timer.innerHTML = `(費時${output.time}毫秒)`;
             btnPrint.disabled = false;
