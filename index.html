@@ -1,22 +1,190 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>BBLJ Netlify</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="/favicon.ico?v=1">
-    </head>
-    <body>
-        <h1>Hello Netlify!</h1>
-        <p>開啟console可以看到"Go Web Assembly"表示Web Assembly載入成功！</p>
-        <script src="wasm_exec.js"></script>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>👹勒索信產生器👹</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="icon" href="favicon.ico?v=1">
+    <style>
+        .page-title{
+            margin: 10px 0px;
+            width: 100%;
+            text-align: center;
+        }
+        #frmInputText{
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+        }
+        .instruction{
+            text-align: left;
+        }
+        .input-row{
+            text-align: center;
+        }
+        #inputText{
+            width: 100%;
+            max-width: 750px;
+            height: 8rem;
+        }
+        .btn-wrapper{
+            margin: 10px 0px;
+            width: 100%;
+            text-align: center;
+        }
+        .btn-wrapper .btn{
+            margin: 0px 10px;
+        }
+        #copySuccess{
+            display: none;
+            position: fixed;
+            align-items: center;
+            justify-content: center;
+            top: 0px;
+            bottom: 0px;
+            width: 100%;
+            z-index: 2;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        #copySuccessMsg{
+            border-radius: 15%;
+            background-color: white;
+            width: 50%;
+            height: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <script src="ransom-letter.js"></script>
+</head>
+
+<body>
+    <h1 id="pageTitle" class="page-title">勒索信產生器</h1>
+    <script>
+        /** @type {String} */
+        let pageTitle = document.getElementById('pageTitle').innerHTML;
+        pageTitle = ransomLetterJS(pageTitle);
+        document.getElementById('pageTitle').innerHTML = pageTitle;
+    </script>
+    <form id="frmInputText">
+        <div class="instruction">說明：請於下方文字輸入框輸入勒索信內文或是將勒索信內文（純文字、多行）直接複製貼上到下方文字輸入框後，點擊「產生勒索信」按鈕即可產生出勒索信文字。將勒索信文字複製到Word文件或Gmail也能保持勒索信的樣式哦！😁</div>
+        <textarea id="inputText" name="inputText" placeholder="請輸入勒索信內文...(最多65536字元)" maxlength="65536" required></textarea>
+        <br/>
+        <div class="input-row">
+            <label for="selMode">WASM/JS:</label>
+            <select id="selMode">
+                <option value="0" selected>使用WASM</option>
+                <option value="1">使用JS</option>
+            </select>
+        </div>
+        <div class="instruction">可選擇使用WebAssembly撰寫的勒索信產生器或是使用Vallina JS撰寫的勒索信產生器</div>
+        <br/>
+    </form>
+    <div class="btn-wrapper">
+        <button id="btnPrint" class="btn btn-danger">產生勒索信</button>
+        <button id="btnCopy" class="btn btn-warning">複製勒索信</button>
+    </div>
+    <div id="timer">(計時)</div>
+    <div id="resultDiv"></div>
+    <div id="copySuccess">
+        <div id="copySuccessMsg">複製到剪貼簿！</div>
         <script>
-            const go = new Go();
-            WebAssembly.instantiateStreaming(fetch("ransom.wasm"), go.importObject).then((result) => {
-                go.run(result.instance);
-            });
+            /** @type {String} */
+            let msg = document.getElementById('copySuccessMsg').innerHTML;
+            msg = ransomLetterJS(msg);
+            document.getElementById('copySuccessMsg').innerHTML = msg;
         </script>
-    </body>
+    </div>
+    <script>
+        
+        /** @type {HTMLFormElement} */
+        const frmInputText = document.getElementById("frmInputText");
+        /** @type {HTMLTextAreaElement} */
+        const inputText = document.getElementById("inputText");
+        /** @type {HTMLSelectElement} */
+        const selMode = document.getElementById("selMode");
+        /** @type {HTMLDivElement} */
+        const timer = document.getElementById("timer");
+        /** @type {HTMLDivElement} */
+        const resultDiv = document.getElementById("resultDiv");
+        /** @type {HTMLButtonElement} */
+        const btnPrint = document.getElementById('btnPrint');
+        /** @type {HTMLButtonElement} */
+        const btnCopy = document.getElementById('btnCopy');
+        /** @type {HTMLDivElement} */
+        const copySuccess = document.getElementById("copySuccess");
+        /** @type {HTMLDivElement} */
+        const copySuccessMsg = document.getElementById("copySuccessMsg");
+
+        let w = new Worker("worker.js");
+        w.onmessage = function(event) {
+            let output = {
+                /** @type {String} */
+                html: event.data['html'],
+                /** @type {Number}} */
+                time: event.data['time'],
+            };
+            resultDiv.innerHTML = output.html;
+            timer.innerHTML = `(費時${output.time}毫秒)`;
+            btnPrint.disabled = false;
+        }
+
+        /** @return {Boolean} */
+        function validateInput(){
+            let isValid = frmInputText.checkValidity();
+            if(isValid){
+                return true;
+            }else{
+                frmInputText.reportValidity();
+                return false;
+            }
+        }
+
+        btnPrint.addEventListener('click', function() {
+            if(!validateInput()){
+                return;
+            }
+            resultDiv.innerHTML = `<img src="loading.GIF">`;
+            let text = inputText.value;
+            let mode = selMode.value;
+            btnPrint.disabled = true;
+            w.postMessage({
+                /** @type {String} */
+                mode: mode,
+                /** @type {String} */
+                text: text
+            });
+        });
+
+        function copyRichText(text) {
+            const listener = function(ev) {
+                ev.preventDefault();
+                ev.clipboardData.setData('text/html', text);
+                ev.clipboardData.setData('text/plain', text);
+            };
+            document.addEventListener('copy', listener);
+            document.execCommand('copy');
+            document.removeEventListener('copy', listener);
+        }
+
+        btnCopy.addEventListener('click',function(){
+            if(resultDiv.innerHTML.length != 0){
+                let text = resultDiv.innerHTML;
+                copyRichText(text);
+                copySuccess.style.display = "flex";
+                setTimeout(function(){
+                    copySuccess.style.display = "none";
+                },1000);
+            }
+        });
+        
+    </script>
+</body>
+
 </html>
