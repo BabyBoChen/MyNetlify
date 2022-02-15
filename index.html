@@ -52,10 +52,12 @@
             background-color: rgba(0, 0, 0, 0.5);
         }
         #copySuccessMsg{
-            border-radius: 15%;
+            border-radius: 5%;
             background-color: white;
-            width: 50%;
-            height: 30%;
+            max-width: 400px;
+            width: calc(100% - 10px);
+            margin: 0px 10px;
+            height: 30vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -97,7 +99,7 @@
         <script>
             /** @type {String} */
             let msg = document.getElementById('copySuccessMsg').innerHTML;
-            msg = ransomLetterJS(msg);
+            msg = ransomLetterJSForMsg(msg);
             document.getElementById('copySuccessMsg').innerHTML = msg;
         </script>
     </div>

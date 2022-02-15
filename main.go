@@ -153,7 +153,7 @@ func changeFont(line string) string {
 	for _, c := range line {
 		var color = randColor()
 		var bgColor = randBgColor(color)
-		paragraph += fmt.Sprintf("<span style='font-size:%dpx;color:%s;background-color:%s;font-style:%s;text-decoration:%s;'>%s</span>", rand.Intn(36)+12, color, bgColor, randItalic(), randTextDecor(), string(c))
+		paragraph += fmt.Sprintf("<span style='font-size:%drem;color:%s;background-color:%s;font-style:%s;text-decoration:%s;'>%s</span>", rand.Intn(3)+1, color, bgColor, randItalic(), randTextDecor(), string(c))
 	}
 	paragraph += "</p>"
 	return paragraph

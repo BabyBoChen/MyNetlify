@@ -153,7 +153,7 @@ function changeFont(line) {
     for (let i = 0; i < line.length; i++) {
         var color = randColor()
         var bgColor = randBgColor(color)
-        paragraph += `<span style='font-size:${getRandomInt(4)+1}rem;color:${color};background-color:${bgColor};font-style:${randItalic()};text-decoration:${randTextDecor()};'>${line[i]}</span>`;
+        paragraph += `<span style='font-size:${getRandomInt(3)+1}rem;color:${color};background-color:${bgColor};font-style:${randItalic()};text-decoration:${randTextDecor()};'>${line[i]}</span>`;
     }
     paragraph += "</p>"
     return paragraph
@@ -170,5 +170,28 @@ function ransomLetterJS(text) {
     lines.forEach(function(line) {
         output += changeFont(line);
     });
+    return output;
+}
+
+//用<p>標簽包裝一行文字並將文字轉變成勒索信樣式
+/** @param line {String} @return {String} */
+function changeFontForMsg(line) {
+    let paragraph = "<p>";
+    for (let i = 0; i < line.length; i++) {
+        var color = randColor()
+        var bgColor = randBgColor(color)
+        paragraph += `<span style='font-size:${getRandomInt(2)+1}rem;color:${color};background-color:${bgColor};font-style:${randItalic()};text-decoration:${randTextDecor()};'>${line[i]}</span>`;
+    }
+    paragraph += "</p>"
+    return paragraph
+}
+
+/** @param text {String} @return {String}*/
+function ransomLetterJSForMsg(text) {
+    if (!text) {
+        return null;
+    }
+    let output = "";
+    output += changeFontForMsg(text);
     return output;
 }
