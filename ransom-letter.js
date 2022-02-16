@@ -153,7 +153,7 @@ function changeFont(line) {
     for (let i = 0; i < line.length; i++) {
         var color = randColor()
         var bgColor = randBgColor(color)
-        paragraph += `<span style='font-size:${getRandomInt(3)+1}rem;color:${color};background-color:${bgColor};font-style:${randItalic()};text-decoration:${randTextDecor()};'>${line[i]}</span>`;
+        paragraph += `<span style='font-size:${getRandomInt(32)+16}px;color:${color};background-color:${bgColor};font-style:${randItalic()};text-decoration:${randTextDecor()};'>${line[i]}</span>`;
     }
     paragraph += "</p>"
     return paragraph
