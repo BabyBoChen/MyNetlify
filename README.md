@@ -5,3 +5,5 @@ Ransom Letter
 
 
 本作品主要是想測試以Golang撰寫出的WebAssembly和Vanilla JS在進行文字處理時哪個方式效率較佳。實驗結果竟然是JS比WebAssembly快上很多倍，可能是因為要丟給WebAssembly處理的文字運算無法發揮出WebAssembly真正的效用。
+
+網頁程式碼已上傳至GitHub存放庫，並使用Netlify的持續部署功能隨時更新上線。
