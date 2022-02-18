@@ -115,12 +115,13 @@
         const timer = document.getElementById("timer");
         /** @type {HTMLDivElement} */
         const resultDiv = document.getElementById("resultDiv");
-        resultDiv.innerHTML = `<img src="loading.GIF">`;
+        resultDiv.innerHTML = `載入中...<br/><img src="loading.GIF">`;
         /** @type {HTMLButtonElement} */
         const btnPrint = document.getElementById('btnPrint');
         btnPrint.disabled = true;
         /** @type {HTMLButtonElement} */
         const btnCopy = document.getElementById('btnCopy');
+        btnCopy.disabled = true;
         /** @type {HTMLDivElement} */
         const copySuccess = document.getElementById("copySuccess");
         /** @type {HTMLDivElement} */
@@ -141,6 +142,7 @@
                 resultDiv.innerHTML = output.html;
                 timer.innerHTML = `(費時${output.time}毫秒)`;
                 btnPrint.disabled = false;
+                btnCopy.disabled = false;
             }
         }
 
